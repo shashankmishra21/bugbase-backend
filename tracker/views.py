@@ -1,14 +1,14 @@
 from rest_framework import generics
 from .models import Bug, Comment
 from .serializers import BugSerializer, CommentSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from .ai_utils import generate_ai_suggestion
 
 # List all bugs or create a new one
 class BugListCreateView(generics.ListCreateAPIView):
     queryset = Bug.objects.all()
     serializer_class = BugSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         title = self.request.data.get('title', '')
