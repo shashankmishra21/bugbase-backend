@@ -27,3 +27,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author.username} on {self.bug.title}"
+
+
+def __str__(self):
+    return self.title  # for Bug
+
+# and for Comment
+def __str__(self):
+    return f"Comment on {self.bug.title} by {self.author}"
