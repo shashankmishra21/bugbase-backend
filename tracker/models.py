@@ -15,6 +15,8 @@ class Bug(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    ai_suggestion = models.TextField(blank=True, null=True)
+    
     def __str__(self):
         return self.title
 
@@ -27,3 +29,5 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author.username} on {self.bug.title}"
+
+
