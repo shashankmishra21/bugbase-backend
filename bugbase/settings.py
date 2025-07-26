@@ -13,8 +13,8 @@ ROOT_URLCONF = 'bugbase.urls'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
      "https://bugbase-collaborative-bug-tracking-tool-mio1r9wls.vercel.app",
-    "https://bugbase-collaborative-bug-tracking.vercel.app/",
-    "https://bugbase-collaborative-bug-tr-shashank-mishras-projects-ce898fa4.vercel.app/",
+    "https://bugbase-collaborative-bug-tracking.vercel.app",
+    "https://bugbase-collaborative-bug-tr-shashank-mishras-projects-ce898fa4.vercel.app",
 ]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
