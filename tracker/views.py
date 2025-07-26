@@ -3,11 +3,13 @@ from .models import Bug, Comment
 from .serializers import BugSerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from .ai_utils import generate_ai_suggestion
+from rest_framework.authentication import TokenAuthentication
 
 # List all bugs or create a new one
 class BugListCreateView(generics.ListCreateAPIView):
     queryset = Bug.objects.all()
     serializer_class = BugSerializer
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
