@@ -5,7 +5,8 @@ class BugSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bug
         fields = '__all__'
-
+        read_only_fields = ['created_by', 'ai_suggestion', 'created_at']
+        
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
