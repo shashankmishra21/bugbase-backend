@@ -22,12 +22,7 @@ class Bug(models.Model):
 
 
 class Comment(models.Model):
-    bug = models.ForeignKey(Bug, related_name='comments', on_delete=models.CASCADE)
+    bug = models.ForeignKey(Bug, on_delete=models.CASCADE)
     text = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Comment by {self.author.username} on {self.bug.title}"
-
-

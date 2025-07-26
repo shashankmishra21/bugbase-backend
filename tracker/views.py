@@ -1,12 +1,14 @@
 from rest_framework import generics
 from .models import Bug, Comment
 from .serializers import BugSerializer, CommentSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , IsAdminUser
 from .ai_utils import generate_ai_suggestion
 from rest_framework.authentication import TokenAuthentication
 from .permissions import IsOwnerOrSuperUser  
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from django.http import HttpResponse
+import csv
 
 # List all bugs or create a new one
 class BugListCreateView(generics.ListCreateAPIView):
@@ -33,8 +35,16 @@ class BugDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 #  List all comments or add a new one
 class CommentListCreateView(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        bug_id = self.request.query_params.get('bug')
+        return Comment.objects.filter(bug_id=bug_id) if bug_id else Comment.objects.all()
+
+    def perform_create(self, serializer):
+        # This allows any authenticated user to add comment
+        serializer.save(created_by=self.request.user)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -44,3 +54,25 @@ def get_user_info(request):
         'username': request.user.username,
         'is_superuser': request.user.is_superuser,
     })
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def export_bugs_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="bugs.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Title', 'Description', 'Status', 'AI Suggestion', 'Created At', 'Created By'])
+
+    for bug in Bug.objects.all():
+        writer.writerow([
+            bug.id,
+            bug.title,
+            bug.description,
+            bug.status,
+            bug.ai_suggestion,
+            bug.created_at,
+            bug.created_by.username  # Or bug.created_by_id if no related user object
+        ])
+
+    return response

@@ -8,6 +8,8 @@ class BugSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_by', 'ai_suggestion', 'created_at']
         
 class CommentSerializer(serializers.ModelSerializer):
+    created_by = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id', 'bug', 'text', 'created_by', 'created_at']
