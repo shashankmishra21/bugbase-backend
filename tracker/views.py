@@ -81,8 +81,9 @@ def export_bugs_csv(request):
 
     return response
 
-    class LoginView(APIView):
-    def post(self, request):
+   
+class LoginView(APIView):
+    def post(self, request):  # ✅ This line must be indented under the class
         username = request.data.get('username')
         password = request.data.get('password')
 
