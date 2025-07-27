@@ -31,15 +31,18 @@ SECRET_KEY = 'django-insecure-y88%ec3qo_rs9yy1$aq-c*0!^)*d$29i347+f3mn-02u%#qf0p
 DEBUG = False
 
 ALLOWED_HOSTS = ['your-domain.com', 'bugbase.onrender.com', 'localhost']
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
 }
+
 
 
 # Application definition
