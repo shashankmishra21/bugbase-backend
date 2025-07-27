@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import BugListCreateView, BugDetailView, CommentListCreateView, get_user_info, export_bugs_csv
 from .auth_views import register_user, login_user
+from . import auth_views 
 
 urlpatterns = [
     path('bugs/', BugListCreateView.as_view(), name='bug-list-create'),
