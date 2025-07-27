@@ -26,6 +26,10 @@ def register_user(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_user(request):
+    # 🔥 Debug Logs to check login payload
+    print("🔥 RAW BODY:", request.body)
+    print("🔥 PARSED DATA:", request.data)
+
     username = request.data.get('username')
     password = request.data.get('password')
 
@@ -33,8 +37,8 @@ def login_user(request):
         return Response({'error': 'Username and password required'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = authenticate(username=username, password=password)
-    if user is not None:
-        token, _ = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key}, status=status.HTTP_200_OK)
-    else:
+    if user is None:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key}, status=status.HTTP_200_OK)
