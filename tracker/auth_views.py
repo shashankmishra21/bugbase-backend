@@ -26,26 +26,30 @@ def register_user(request):
     return Response({'token': token.key}, status=status.HTTP_201_CREATED)
 
 @csrf_exempt
+import traceback
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_user(request):
-    print("🔥 Incoming Login Request")
-    print("🔥 Headers:", request.headers)
-    print("🔥 Body (raw):", request.body)
-    print("🔥 Parsed request.data:", request.data)
+    try:
+        print("🔥 Incoming Login Request")
+        print("🔥 Headers:", request.headers)
+        print("🔥 Body (raw):", request.body)
+        print("🔥 Parsed request.data:", request.data)
 
-    username = request.data.get('username')
-    password = request.data.get('password')
+        username = request.data.get('username')
+        password = request.data.get('password')
 
-    if not username or not password:
-        print("❌ Missing username or password")
-        return Response({'error': 'Username and password required'}, status=status.HTTP_400_BAD_REQUEST)
+        if not username or not password:
+            return Response({'error': 'Username and password required'}, status=status.HTTP_400_BAD_REQUEST)
 
-    user = authenticate(username=username, password=password)
-    if user is None:
-        print("❌ Invalid credentials for username:", username)
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+        user = authenticate(username=username, password=password)
+        if user is None:
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
-    token, _ = Token.objects.get_or_create(user=user)
-    print("✅ Authenticated user:", user.username)
-    return Response({'token': token.key}, status=status.HTTP_200_OK)
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print("💥 Error:", e)
+        print(traceback.format_exc())
+        return Response({'error': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
